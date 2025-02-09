@@ -20,11 +20,9 @@ function PostCard({ post }: { post: Post }) {
         <div className="post-footer">
           <div className="author-info">
             <div className="author-avatar">
-              {post.author.name[0].toUpperCase()}
+              {post.id.toString()}
             </div>
             <div>
-              <p className="author-name">{post.author.name}</p>
-              <p className="author-email">{post.author.email}</p>
             </div>
           </div>
         </div>
@@ -71,18 +69,17 @@ function App() {
 
   return (
     <Container>
-      <h1 className="text-3xl font-bold mb-8 text-center">게시글 목록</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">Post List</h1>
       
       {data?.map((post: Post) => (
         <PostCard key={post.id} post={post} />
       ))}
 
       <div className="pagination">
-        <button onClick={() => setPage(p => p - 1)} disabled={page <= 1}>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button onClick={() => setPage(p => p - 1)} disabled={page <= 1} className="icon-button">
+          <svg className="left-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          이전
         </button>
         
         <div className="page-info">
@@ -91,9 +88,8 @@ function App() {
           <span className="page-total">10</span>
         </div>
         
-        <button onClick={() => setPage(p => p + 1)} disabled={page >= 10}>
-          다음
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button onClick={() => setPage(p => p + 1)} disabled={page >= 10} className="icon-button">
+          <svg className="right-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>

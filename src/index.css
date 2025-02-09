@@ -236,7 +236,14 @@ a:hover {
   gap: 0.25rem;
   font-size: 0.875rem;
 }
-
+.left-arrow {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.right-arrow {
+  width: 1.5rem;
+  height: 1.5rem;
+}
 .page-number {
   font-weight: 500;
 }
