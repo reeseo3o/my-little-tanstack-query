@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 type CacheData<T> = {
   data: T;
   timestamp: number;
+  staleTimestamp: number;
 };
 
 const queryCache = new Map<string, CacheData<unknown>>();
@@ -13,6 +14,7 @@ type UseQueryProps<T = unknown> = {
   retry?: boolean | number;
   cache?: boolean;
   cacheTime?: number;
+  staleTime?: number;
 };
 
 export function useQuery<TData = unknown, TError = unknown>({
@@ -21,18 +23,31 @@ export function useQuery<TData = unknown, TError = unknown>({
   retry = 3,
   cache = true,
   cacheTime = 5 * 60 * 1000,
+  staleTime = 0,
 }: UseQueryProps<TData>) {
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState<TError | null>(null);
   const [data, setData] = useState<TData | null>(() => {
-    console.log('Initial state setup time:', Date.now());
+
     if (!cache) return null;
     
     const cachedData = queryCache.get(queryKey) as CacheData<TData> | undefined;
-    if (!cachedData) return null;
+    if (!cachedData) {
+
+      return null;
+    }
     
-    const isExpired = Date.now() - cachedData.timestamp > cacheTime;
-    return isExpired ? null : cachedData.data;
+    const now = Date.now();
+    const timeSinceCache = now - cachedData.timestamp;
+
+
+    
+    const isExpired = timeSinceCache > cacheTime;
+    if (isExpired) {
+      return null;
+    } else {
+      return cachedData.data;
+    }
   });
 
   useEffect(() => {
@@ -40,20 +55,33 @@ export function useQuery<TData = unknown, TError = unknown>({
     let failureCount = 0;
     
     if (!cache) {
+
       queryCache.delete(queryKey);
     }
 
-
     const cachedData = queryCache.get(queryKey) as CacheData<TData> | undefined;
-    console.log('Effect execution time:', Date.now());
-    const isExpired = cachedData 
-      ? Date.now() - cachedData.timestamp > cacheTime
-      : true;
+    const now = Date.now();
+    const isExpired = cachedData ? now - cachedData.timestamp > cacheTime : true;
+    const isStale = cachedData ? now - cachedData.staleTimestamp > staleTime : true;
 
-    if (cache && cachedData && !isExpired) {
+
+
+
+
+
+    
+
+
+
+    if (cache && cachedData && !isExpired && !isStale) {
       setData(cachedData.data);
       setIsPending(false);
       return;
+    }
+
+    if (cache && cachedData && !isExpired && isStale) {
+      setData(cachedData.data);
+      setIsPending(false);
     }
 
     const executeQuery = async () => {
@@ -65,6 +93,7 @@ export function useQuery<TData = unknown, TError = unknown>({
           queryCache.set(queryKey, {
             data: result,
             timestamp: Date.now(),
+            staleTimestamp: Date.now(),
           });                 
         }
         setData(result);
@@ -85,13 +114,15 @@ export function useQuery<TData = unknown, TError = unknown>({
       }
     };
 
-    setIsPending(true);
-    executeQuery();
+    if (isStale || !cachedData) {
+      if (!cachedData) setIsPending(true);
+      executeQuery();
+    }
     
     return () => {
       isActive = false;
     };
-  }, [queryKey, retry, cache, cacheTime]);
+  }, [queryKey, retry, cache, cacheTime, staleTime]);
 
   return { isPending, error, data };
 }

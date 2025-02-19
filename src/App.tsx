@@ -39,6 +39,7 @@ function App() {
     queryFn: () => fetchPost(page),
     cache: true,
     cacheTime: 5 * 60 * 1000, // 5분
+    staleTime: 10 * 1000, 
   });
 
   if (isPending) {
