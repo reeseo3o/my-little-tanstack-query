@@ -1,50 +1,35 @@
-# React + TypeScript + Vite
+# My Little TanStack Query
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React Query의 핵심 기능들을 직접 구현해보면서 이해하는 프로젝트입니다. 특히 staleTime과 Stale-While-Revalidate 패턴의 동작 방식을 실제 코드로 구현하여 학습할 수 있습니다.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##  블로그 글을 위한 예제 코드
 
-## Expanding the ESLint configuration
+이 프로젝트는 다음 블로그 포스트의 예제 코드입니다.
+- [React Query 직접 구현하면서 이해하기](https://www.reese-log.com/tanstack-query-internals-and-implementation)
+- React Query의 staleTime과 Stale-While-Revalidate 패턴 이해하기
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+##  주요 기능
 
-- Configure the top-level `parserOptions` property like this:
+- **caching**: 데이터 캐싱 및 캐시 만료 관리
+- **staleTime**: 데이터 신선도 관리
+- **Stale-While-Revalidate**: 백그라운드 데이터 갱신
+- **retry**: 실패한 요청에 대한 재시도 로직
+- **Race Condition 방지**: 동시 요청 처리
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+##  학습 포인트
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+1. React Query의 핵심 개념
+   - staleTime vs cacheTime
+   - Stale-While-Revalidate 패턴
+   - 캐싱 전략
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+2. React 훅 구현
+   - 커스텀 훅 설계
+   - 타입스크립트 타입 설계
+   - 사이드 이펙트 관리
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+3. 성능 최적화
+   - 캐시 관리
+   - 불필요한 네트워크 요청 방지
+   - Race condition 처리
