@@ -7,7 +7,7 @@ React Query의 핵심 기능들을 직접 구현해보면서 이해하는 프로
 
 이 프로젝트는 다음 블로그 포스트의 예제 코드입니다.
 - [React Query 직접 구현하면서 이해하기](https://www.reese-log.com/tanstack-query-internals-and-implementation)
-- React Query의 staleTime과 Stale-While-Revalidate 패턴 이해하기
+- [useQuery에 staleTime 구현하기: stale-while-revalidate 패턴 톺아보기](https://www.reese-log.com/usequery-staletime-and-swr)
 
 ##  주요 기능
 
